@@ -117,7 +117,7 @@ public class BinarySequencesHelper {
     public static BigInteger operatorH(BigInteger vertex, BigInteger sizeGraph, int n, int r) {
         List<BigInteger> bigIntegers = new ArrayList<BigInteger>();
         for (int i = 0; i < r; i++) {
-            bigIntegers.add(fewOperatorA(vertex, sizeGraph, n, r));
+            bigIntegers.add(fewOperatorA(vertex, sizeGraph, n, i));
         }
         BigInteger ans = BigInteger.ZERO;
         for (BigInteger bigInteger : bigIntegers) {
