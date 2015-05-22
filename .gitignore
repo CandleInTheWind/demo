@@ -12,3 +12,4 @@ doc/
 .idea
 .secret
 *.xml
+.idea/
