@@ -13,3 +13,4 @@ doc/
 .secret
 *.xml
 .idea/
+*.class

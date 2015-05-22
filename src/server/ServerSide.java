@@ -1,3 +1,5 @@
+package server;
+
 /**
  * Created by rage on 16.05.15.
  */
