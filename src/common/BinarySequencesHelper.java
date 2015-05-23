@@ -3,6 +3,7 @@ package common;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by rage on 23.05.15.
@@ -125,5 +126,34 @@ public class BinarySequencesHelper {
         }
         return ans;
     }
+
+    /**
+     * Generate random bigInteger num with length n
+     *
+     * @param n - length - length binary sequences
+     * @return 0 --> 2^n - 1
+     */
+
+    public static BigInteger rndBigInt(int n) {
+        Random rnd = new Random();
+        return new BigInteger(n, rnd);
+    }
+
+    /**
+     * Make string for output with leading zero length n
+     *
+     * @param binaryNum - binary string without leading zerro
+     * @param n         - - length binary sequences
+     * @return String with leadingZero
+     */
+
+    public static String makeLeadingZero(String binaryNum, int n) {
+        StringBuilder stringBuilder = new StringBuilder("");
+        for (int i = 0; i < n - binaryNum.length(); i++) {
+            stringBuilder.append("0");
+        }
+        return stringBuilder.append(binaryNum).toString();
+    }
+
 
 }
