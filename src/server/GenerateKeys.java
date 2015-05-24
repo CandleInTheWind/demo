@@ -5,6 +5,7 @@ import common.PrivateKey;
 import common.PubKey;
 import javafx.util.Pair;
 
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -16,7 +17,7 @@ public class GenerateKeys {
 
     private static final int AMOUNT_BASIC_NUM = 5;//10000;
 
-    public static Pair<PrivateKey, PubKey> generate(int n) {
+    private static Pair<PrivateKey, PubKey> generate(int n) {
 
         List<String> listBasicNums = new ArrayList<String>();
         BigInteger sumOfBasic = BigInteger.ZERO;
@@ -44,4 +45,23 @@ public class GenerateKeys {
     }
 
 
+    public static void makeKeys() {
+        try {
+            long t1 = System.currentTimeMillis();
+            PrintWriter outPublic = new PrintWriter("publicKey.txt");
+            PrintWriter outPrivate = new PrintWriter("privateKey.txt");
+
+            Pair<PrivateKey, PubKey> generate = GenerateKeys.generate(10);
+
+            outPublic.println(generate.getValue().outputInFile());
+            outPrivate.println(generate.getKey().outputInFile());
+            outPublic.close();
+            outPrivate.close();
+            long t2 = System.currentTimeMillis();
+            System.err.println("Generate time = " + (t2 - t1));
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            System.exit(-1);
+        }
+    }
 }

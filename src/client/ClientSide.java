@@ -1,5 +1,9 @@
 package client;
 
+import common.PubKey;
+import common.ReadKeys;
+import server.GenerateKeys;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,49 +32,6 @@ public class ClientSide extends JPanel {
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
 
-    protected JComponent makeButtonPanel(String text, String type) {
-        JPanel panel = new JPanel(false);
-        final JButton jButton = new JButton(text);
-        jButton.setPreferredSize(new Dimension(300, 100));
-        ActionListener l;
-        if (type.equals(GENERATE)) {
-            l = new ActionListenerForGenerate(jButton);
-        } else if (type.equals(VERIFIED)) {
-            l = new ActionListenerForVerified(jButton);
-        } else {
-            throw new IllegalArgumentException("Vse ochen ploho");
-        }
-        jButton.addActionListener(l);
-        panel.add(jButton, BorderLayout.CENTER);
-        return panel;
-    }
-
-    private class ActionListenerForGenerate implements ActionListener {
-
-        private final JButton jButton;
-
-        private ActionListenerForGenerate(JButton jButton) {
-            this.jButton = jButton;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            jButton.setText(e.getActionCommand() + GENERATE);
-        }
-    }
-
-    private class ActionListenerForVerified implements ActionListener {
-
-        private final JButton jButton;
-
-        private ActionListenerForVerified(JButton jButton) {
-            this.jButton = jButton;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            jButton.setText(e.getActionCommand() + VERIFIED);
-        }
-    }
-
     private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame();
@@ -94,5 +55,56 @@ public class ClientSide extends JPanel {
                 createAndShowGUI();
             }
         });
+    }
+
+    protected JComponent makeButtonPanel(String text, String type) {
+        JPanel panel = new JPanel(false);
+        final JButton jButton = new JButton(text);
+        jButton.setPreferredSize(new Dimension(300, 100));
+        ActionListener l;
+        if (type.equals(GENERATE)) {
+            l = new ActionListenerForGenerate(this);
+        } else if (type.equals(VERIFIED)) {
+            l = new ActionListenerForVerified(this);
+        } else {
+            throw new IllegalArgumentException("Vse ochen ploho");
+        }
+        jButton.addActionListener(l);
+        panel.add(jButton, BorderLayout.CENTER);
+        return panel;
+    }
+
+    private class ActionListenerForGenerate implements ActionListener {
+
+        private final ClientSide clientSide;
+
+        private ActionListenerForGenerate(ClientSide clientSide) {
+            this.clientSide = clientSide;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            GenerateKeys.makeKeys();
+            JOptionPane.showMessageDialog(clientSide, "Генерация завершена!");
+        }
+    }
+
+    private class ActionListenerForVerified implements ActionListener {
+
+        private final ClientSide clientSide;
+
+        private ActionListenerForVerified(ClientSide clientSide) {
+            this.clientSide = clientSide;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileopen = new JFileChooser();
+            int ret = fileopen.showDialog(null, "Открыть файл");
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                PubKey pubKey = ReadKeys.readPubKey(fileopen.getSelectedFile());
+                System.out.println("pubKey = " + pubKey);
+            } else {
+                JOptionPane.showMessageDialog(clientSide, "Входные данные некорректные!");
+            }
+        }
     }
 }
