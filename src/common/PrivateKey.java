@@ -25,6 +25,23 @@ public class PrivateKey implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PrivateKey that = (PrivateKey) o;
+
+        if (!stepForBasic.equals(that.stepForBasic)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return stepForBasic.hashCode();
+    }
+
     public String outputInFile() {
         return stepForBasic.toString();
     }

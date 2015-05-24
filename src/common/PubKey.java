@@ -32,6 +32,26 @@ public class PubKey implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PubKey pubKey = (PubKey) o;
+
+        if (!controlSum.equals(pubKey.controlSum)) return false;
+        if (!listBasicNums.equals(pubKey.listBasicNums)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = listBasicNums.hashCode();
+        result = 31 * result + controlSum.hashCode();
+        return result;
+    }
+
     public String outputInFile() {
         return listBasicNums + "\n" + controlSum;
     }

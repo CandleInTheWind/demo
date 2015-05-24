@@ -10,6 +10,9 @@ import java.util.Random;
  */
 public class BinarySequencesHelper {
 
+    private static final int RANDOM_STEP = 1000;
+    private static final int MIN_RANDOM_STEP = 100;
+
     /**
      * Get amount vertex in graph
      *
@@ -83,7 +86,7 @@ public class BinarySequencesHelper {
      * @param k         -- k how make A^k(x)
      * @return A^k(x) = y  -- new vertex
      */
-    public static BigInteger fewOperatorA(BigInteger vertex, BigInteger sizeGraph, int n, int k) {
+    public static BigInteger operatorA(BigInteger vertex, BigInteger sizeGraph, int n, int k) {
         while (k-- > 0) {
             vertex = operatorA(vertex, sizeGraph, n);
         }
@@ -96,12 +99,13 @@ public class BinarySequencesHelper {
      *
      * @param vertex    - particularly vertex for which we want to calculate the next value
      * @param sizeGraph - size tree for n
+     * @param n         -- length binary sequences
      * @param k         - k
      * @return G^k(x) = y
      */
 
-    public static BigInteger operatorG(BigInteger vertex, BigInteger sizeGraph, int k) {
-        return vertex.shiftLeft(k).mod(sizeGraph.subtract(BigInteger.ONE));
+    public static BigInteger operatorG(BigInteger vertex, BigInteger sizeGraph, int n, int k) {
+        return vertex.shiftLeft(k % n).mod(sizeGraph.subtract(BigInteger.ONE));
     }
 
 
@@ -118,13 +122,25 @@ public class BinarySequencesHelper {
     public static BigInteger operatorH(BigInteger vertex, BigInteger sizeGraph, int n, int r) {
         List<BigInteger> bigIntegers = new ArrayList<BigInteger>();
         for (int i = 0; i < r; i++) {
-            bigIntegers.add(fewOperatorA(vertex, sizeGraph, n, i));
+            bigIntegers.add(operatorA(vertex, sizeGraph, n, i));
         }
         BigInteger ans = BigInteger.ZERO;
         for (BigInteger bigInteger : bigIntegers) {
             ans = ans.xor(bigInteger);
         }
         return ans;
+    }
+
+
+    public static String transformVertexByAllOperator(String basicNum, BigInteger sizeGraph, int n,
+                                                      int bobStepForA,
+                                                      int bobStepForG,
+                                                      int bobStepForH) {
+        BigInteger vertex = new BigInteger(basicNum, 2);
+        vertex = BinarySequencesHelper.operatorA(vertex, sizeGraph, n, bobStepForA);
+        vertex = BinarySequencesHelper.operatorG(vertex, sizeGraph, n, bobStepForG);
+        vertex = BinarySequencesHelper.operatorH(vertex, sizeGraph, n, bobStepForH);
+        return BinarySequencesHelper.makeLeadingZero(vertex.toString(2), n);
     }
 
     /**
@@ -155,5 +171,14 @@ public class BinarySequencesHelper {
         return stringBuilder.append(binaryNum).toString();
     }
 
+
+    public static int stepRandom() {
+        Random random = new Random();
+        return stepRandom(random);
+    }
+
+    public static int stepRandom(Random random) {
+        return Math.max(random.nextInt(RANDOM_STEP), MIN_RANDOM_STEP);
+    }
 
 }

@@ -28,7 +28,7 @@ public class ReadKeys {
 
     private static List<String> listBasicNum(String tipaList) {
 
-        tipaList = tipaList.replace("[", "").replace("]", "");
+        tipaList = tipaList.replace("[", "").replace("]", "").replace(" ", "");
         List<String> result = new ArrayList<String>();
 
         String[] split = tipaList.split(",");

@@ -3,6 +3,7 @@ package client;
 import common.PubKey;
 import common.ReadKeys;
 import server.GenerateKeys;
+import server.VerifiedPubKey;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,8 +101,17 @@ public class ClientSide extends JPanel {
             JFileChooser fileopen = new JFileChooser();
             int ret = fileopen.showDialog(null, "Открыть файл");
             if (ret == JFileChooser.APPROVE_OPTION) {
+                long t1 = System.currentTimeMillis();
                 PubKey pubKey = ReadKeys.readPubKey(fileopen.getSelectedFile());
-                System.out.println("pubKey = " + pubKey);
+                VerifiedPubKey verifiedPubKey = new VerifiedPubKey();
+                boolean verified = verifiedPubKey.verified(pubKey);
+                long t2 = System.currentTimeMillis();
+                System.err.println("Verified time = " + (t2 - t1));
+                if (verified) {
+                    JOptionPane.showMessageDialog(clientSide, "Успех!");
+                } else {
+                    JOptionPane.showMessageDialog(clientSide, "NOOOOOO!");
+                }
             } else {
                 JOptionPane.showMessageDialog(clientSide, "Входные данные некорректные!");
             }
